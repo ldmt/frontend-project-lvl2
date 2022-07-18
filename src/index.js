@@ -37,6 +37,7 @@ const diff = (dt1, dt2) => {
   return `{\n${result.map((value) => value.join('')).join('\n')}\n}`;
 };
 
+// eslint-disable-next-line no-unused-vars
 export default (fp1, fp2, format) => {
   const data1 = fs.readFileSync(fp1);
   const data2 = fs.readFileSync(fp2);
