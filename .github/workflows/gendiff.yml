@@ -1,0 +1,9 @@
+name: gendiff
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: make lint
+      - run: make test
