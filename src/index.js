@@ -2,40 +2,56 @@
 import * as fs from 'fs';
 import { extname } from 'path';
 import parse from './parser.js';
+import stylish from './stylish.js';
 
 const diff = (data) => {
-  const { parsedData1: obj1, parsedData2: obj2 } = data;
+  const { parsedData1, parsedData2 } = data;
 
-  const keys1 = Object.keys(obj1).sort();
-  const keys2 = Object.keys(obj2).sort();
-  const mergedKeys = keys1.concat(keys2).sort();
+  const makeDiff = (obj1, obj2) => {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
 
-  const uniqKeys = mergedKeys.reduce((result, key) => {
-    if (!result.includes(key)) {
-      result.push(key);
-    }
+    const mergedKeys = keys1.concat(keys2).sort();
+    const uniqKeys = mergedKeys.reduce((result, key) => {
+      if (!result.includes(key)) {
+        result.push(key);
+      }
+      return result;
+    }, []);
+
+    const result = uniqKeys.reduce((acc, uniqKey) => {
+      const hasFirst = obj1.hasOwnProperty(uniqKey);
+      const hasSecond = obj2.hasOwnProperty(uniqKey);
+
+      const typeFirst = typeof obj1[uniqKey];
+      const typeSecond = typeof obj2[uniqKey];
+      const isBothTypeObj = (typeFirst === 'object' && typeFirst === typeSecond);
+
+      const value1 = obj1[uniqKey];
+      const value2 = obj2[uniqKey];
+      const isBothEqualValue = (value1 === value2);
+
+      if (hasFirst && hasSecond && isBothTypeObj) {
+        const arrDifference = makeDiff(value1, value2);
+
+        acc.push({ name: uniqKey, type: 'childrenObj', data: arrDifference });
+      } else if (hasFirst && hasSecond && !isBothEqualValue && !isBothTypeObj) {
+        acc.push({ name: uniqKey, type: 'diffValue', data: [value1, value2] });
+      } else if (hasFirst && !hasSecond) {
+        acc.push({ name: uniqKey, type: 'onlyhasFirst', data: value1 });
+      } else if (!hasFirst && hasSecond) {
+        acc.push({ name: uniqKey, type: 'onlyhasSecond', data: value2 });
+      } else {
+        acc.push({ name: uniqKey, type: 'sameValue', data: value1 });
+      }
+
+      return acc;
+    }, []);
+
     return result;
-  }, []);
+  };
 
-  const result = [];
-  for (let i = 0; i < uniqKeys.length; i += 1) {
-    const key = uniqKeys[i];
-
-    const hasObj1 = obj1.hasOwnProperty(key);
-    const hasObj2 = obj2.hasOwnProperty(key);
-
-    if (hasObj1 && !hasObj2) {
-      result.push([`  - ${key}: `, `${obj1[key]}`]);
-    } else if (!hasObj1 && hasObj2) {
-      result.push([`  + ${key}: `, `${obj2[key]}`]);
-    } else if (obj1[key] === obj2[key]) {
-      result.push([`    ${key}: `, `${obj1[key]}`]);
-    } else {
-      result.push([`  - ${key}: `, `${obj1[key]}`], [`  + ${key}: `, `${obj2[key]}`]);
-    }
-  }
-
-  return `{\n${result.map((value) => value.join('')).join('\n')}\n}`;
+  return makeDiff(parsedData1, parsedData2);
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -50,7 +66,9 @@ export default (fp1, fp2, format) => {
 
   const parsedData = parse(data, fileExt);
 
-  const result = diff(parsedData);
+  const resultDiff = diff(parsedData);
+
+  const result = stylish(resultDiff);
 
   return result;
 };
