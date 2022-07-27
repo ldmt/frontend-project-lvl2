@@ -100,3 +100,10 @@ Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
 Property 'group3' was added with value: [complex value]`);
 });
+
+test('genDiff format json JSON', () => {
+  const path1 = getFixturePath('nestedFile1.json');
+  const path2 = getFixturePath('nestedFile2.json');
+
+  expect(genDiff(path1, path2, 'json')).toBe('[{"name":"common","type":"childrenObj","data":[{"name":"follow","type":"onlyhasSecond","data":false},{"name":"setting1","type":"sameValue","data":"Value 1"},{"name":"setting2","type":"onlyhasFirst","data":200},{"name":"setting3","type":"diffValue","data":[true,null]},{"name":"setting4","type":"onlyhasSecond","data":"blah blah"},{"name":"setting5","type":"onlyhasSecond","data":{"key5":"value5"}},{"name":"setting6","type":"childrenObj","data":[{"name":"doge","type":"childrenObj","data":[{"name":"wow","type":"diffValue","data":["","so much"]}]},{"name":"key","type":"sameValue","data":"value"},{"name":"ops","type":"onlyhasSecond","data":"vops"}]}]},{"name":"group1","type":"childrenObj","data":[{"name":"baz","type":"diffValue","data":["bas","bars"]},{"name":"foo","type":"sameValue","data":"bar"},{"name":"nest","type":"diffValue","data":[{"key":"value"},"str"]}]},{"name":"group2","type":"onlyhasFirst","data":{"abc":12345,"deep":{"id":45}}},{"name":"group3","type":"onlyhasSecond","data":{"deep":{"id":{"number":45}},"fee":100500}}]');
+});
