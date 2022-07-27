@@ -2,7 +2,7 @@
 import * as fs from 'fs';
 import { extname } from 'path';
 import parse from './parser.js';
-import stylish from './stylish.js';
+import formatter from '../formatters/index.js';
 
 const diff = (data) => {
   const { parsedData1, parsedData2 } = data;
@@ -55,7 +55,7 @@ const diff = (data) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-export default (fp1, fp2, format) => {
+export default (fp1, fp2, format = 'stylish') => {
   const data1 = fs.readFileSync(fp1);
   const data2 = fs.readFileSync(fp2);
   const data = { data1, data2 };
@@ -68,7 +68,9 @@ export default (fp1, fp2, format) => {
 
   const resultDiff = diff(parsedData);
 
-  const result = stylish(resultDiff);
+  const requiredFormatter = formatter(format);
+
+  const result = requiredFormatter(resultDiff);
 
   return result;
 };
