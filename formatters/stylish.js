@@ -8,8 +8,8 @@ const stringify = (value, depth, replacer = ' ', spacesCount = 1) => {
     const someArr = entries.map(([k, v]) => {
       const t = typeof v;
       if (t === 'object' && v !== null) {
-        const nestedObj = iterObject(v, d + 4);
-        return `${replacer.repeat(spacesCount * d)}  ${k}: {\n${nestedObj}\n${replacer.repeat(spacesCount * (d + 2))}}`;
+        const nestedObj = iterObject(v, d + 5);
+        return `${replacer.repeat(spacesCount * d)}  ${k}: {\n${nestedObj}\n${replacer.repeat(spacesCount * (d + 3))}}`;
       }
       return `${replacer.repeat(spacesCount * (d))}  ${k}: ${v}`;
     });
@@ -18,7 +18,7 @@ const stringify = (value, depth, replacer = ' ', spacesCount = 1) => {
   };
 
   if (type === 'object' && value !== null) {
-    result += iterObject(value, depth + 4);
+    result += iterObject(value, depth + 5);
   }
 
   return `{\n${result}\n${replacer.repeat(spacesCount * (depth + 2))}}`;
