@@ -37,20 +37,20 @@ export default (tree) => {
 
       switch (type) {
         case 'childrenObj':
-          acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: {\n${iter(data, depth + 4)}\n${replacer.repeat(spacesCount * (depth + 2))}}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}   ${name}: {\n${iter(data, depth + 4)}\n${replacer.repeat(spacesCount * (depth + 2))}}`);
           break;
         case 'sameValue':
-          acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: ${stylishOnlyObj(data, depth)}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}   ${name}: ${stylishOnlyObj(data, depth)}`);
           break;
         case 'diffValue':
-          acc.push(`${replacer.repeat(spacesCount * depth)}- ${name}: ${stylishOnlyObj(data[0], depth)}`);
-          acc.push(`${replacer.repeat(spacesCount * depth)}+ ${name}: ${stylishOnlyObj(data[1], depth)}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}-  ${name}: ${stylishOnlyObj(data[0], depth)}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}+  ${name}: ${stylishOnlyObj(data[1], depth)}`);
           break;
         case 'onlyhasFirst':
-          acc.push(`${replacer.repeat(spacesCount * depth)}- ${name}: ${stylishOnlyObj(data, depth)}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}-  ${name}: ${stylishOnlyObj(data, depth)}`);
           break;
         case 'onlyhasSecond':
-          acc.push(`${replacer.repeat(spacesCount * depth)}+ ${name}: ${stylishOnlyObj(data, depth)}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}+  ${name}: ${stylishOnlyObj(data, depth)}`);
           break;
         default:
         // code
