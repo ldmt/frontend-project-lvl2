@@ -21,7 +21,7 @@ const stringify = (value, depth, replacer = ' ', spacesCount = 1) => {
     result += iterObject(value, depth + 6);
   }
 
-  return `{\n${result}\n${replacer.repeat(spacesCount * (depth + 2))}}`;
+  return `{\n${result}\n${replacer.repeat(spacesCount * (depth + 4))}}`;
 };
 
 export default (tree) => {
@@ -37,7 +37,7 @@ export default (tree) => {
 
       switch (type) {
         case 'childrenObj':
-          acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: {\n${iter(data, depth + 4)}\n${replacer.repeat(spacesCount * (depth + 2))}}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: {\n${iter(data, depth + 4)}\n${replacer.repeat(spacesCount * (depth + 4))}}`);
           break;
         case 'sameValue':
           acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: ${stylishOnlyObj(data, depth)}`);
