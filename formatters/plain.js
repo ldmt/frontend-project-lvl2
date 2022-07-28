@@ -16,19 +16,15 @@ export default (tree) => {
 
       switch (type) {
         case 'childrenObj':
-          acc.push(iter(data, path.concat(name)));
-          break;
+          return [...acc, iter(data, path.concat(name))];
         case 'sameValue':
           break;
         case 'diffValue':
-          acc.push(`Property '${makeEndPath(path, name)}' was updated. From ${stringifyValue(data[0])} to ${stringifyValue(data[1])}`);
-          break;
+          return [...acc, `Property '${makeEndPath(path, name)}' was updated. From ${stringifyValue(data[0])} to ${stringifyValue(data[1])}`];
         case 'onlyhasFirst':
-          acc.push(`Property '${makeEndPath(path, name)}' was removed`);
-          break;
+          return [...acc, `Property '${makeEndPath(path, name)}' was removed`];
         case 'onlyhasSecond':
-          acc.push(`Property '${makeEndPath(path, name)}' was added with value: ${stringifyValue(data)}`);
-          break;
+          return [...acc, `Property '${makeEndPath(path, name)}' was added with value: ${stringifyValue(data)}`];
         default:
           // code
       }
