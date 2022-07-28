@@ -1,4 +1,4 @@
-const stringify = (value, depth, replacer = ' ', spacesCount = 1) => {
+const stringify = (value, depth, replacer = '  ', spacesCount = 1) => {
   let result = '';
   const type = typeof value;
 
@@ -8,24 +8,24 @@ const stringify = (value, depth, replacer = ' ', spacesCount = 1) => {
     const someArr = entries.map(([k, v]) => {
       const t = typeof v;
       if (t === 'object' && v !== null) {
-        const nestedObj = iterObject(v, d + 6);
-        return `${replacer.repeat(spacesCount * d)}  ${k}: {\n${nestedObj}\n${replacer.repeat(spacesCount * (d + 4))}}`;
+        const nestedObj = iterObject(v, d + 2);
+        return `${replacer.repeat(spacesCount * d)}  ${k}: {\n${nestedObj}\n${replacer.repeat(spacesCount * (d + 1))}}`;
       }
-      return `${replacer.repeat(spacesCount * (d))}  ${k}: ${v}`;
+      return `${replacer.repeat(spacesCount * d)}  ${k}: ${v}`;
     });
 
     return someArr.join('\n');
   };
 
   if (type === 'object' && value !== null) {
-    result += iterObject(value, depth + 6);
+    result += iterObject(value, depth + 2);
   }
 
-  return `{\n${result}\n${replacer.repeat(spacesCount * (depth + 4))}}`;
+  return `{\n${result}\n${replacer.repeat(spacesCount * (depth + 1))}}`;
 };
 
 export default (tree) => {
-  const iter = (someTree, depth = 1, replacer = ' ', spacesCount = 1) => {
+  const iter = (someTree, depth = 1, replacer = '  ', spacesCount = 1) => {
     const result = someTree.reduce((acc, valueObj) => {
       const { name, type, data } = valueObj;
 
@@ -37,7 +37,7 @@ export default (tree) => {
 
       switch (type) {
         case 'childrenObj':
-          acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: {\n${iter(data, depth + 4)}\n${replacer.repeat(spacesCount * (depth + 4))}}`);
+          acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: {\n${iter(data, depth + 2)}\n${replacer.repeat(spacesCount * (depth + 1))}}`);
           break;
         case 'sameValue':
           acc.push(`${replacer.repeat(spacesCount * depth)}  ${name}: ${stylishOnlyObj(data, depth)}`);
