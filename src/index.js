@@ -13,8 +13,7 @@ const diff = (data) => {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
 
-    const mergedKeys = keys1.concat(keys2).sort();
-
+    const mergedKeys = [...keys1.concat(keys2)].sort();
     const uniqKeys = mergedKeys.reduce((result, key) => {
       if (!result.includes(key)) {
         return [...result, key];
