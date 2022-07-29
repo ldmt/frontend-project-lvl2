@@ -3,6 +3,7 @@
 /* eslint-disable no-prototype-builtins */
 import * as fs from 'fs';
 import { extname } from 'path';
+import sortBy from 'lodash.sortby';
 import parse from './parser.js';
 import formatter from '../formatters/index.js';
 
@@ -13,7 +14,7 @@ const diff = (data) => {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
 
-    const mergedKeys = [...keys1.concat(keys2)].sort();
+    const mergedKeys = sortBy(keys1.concat(keys2));
     const uniqKeys = mergedKeys.reduce((result, key) => {
       if (!result.includes(key)) {
         return [...result, key];
