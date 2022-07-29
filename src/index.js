@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-else-return */
 /* eslint-disable no-prototype-builtins */
 import * as fs from 'fs';
 import { extname } from 'path';
@@ -12,9 +14,23 @@ const diff = (data) => {
     const keys2 = Object.keys(obj2);
 
     const mergedKeys = keys1.concat(keys2).sort();
+    /* const sort = (arr) => {
+      for (let i = 0; i < arr.length; i += 1) {
+        for (let j = 0; j < arr.length; j += 1) {
+          if (arr[j] > arr[i]) {
+            const temp = arr[i];
+            arr[i] = arr[j];
+            result[i]
+            arr[j] = temp;
+          }
+        }
+      }
+      return arr;
+    };
+    const sortedMergedKeys = sort(mergedKeys); */
     const uniqKeys = mergedKeys.reduce((result, key) => {
       if (!result.includes(key)) {
-        result.push(key);
+        return [...result, key];
       }
       return result;
     }, []);
@@ -34,18 +50,16 @@ const diff = (data) => {
       if (hasFirst && hasSecond && isBothTypeObj) {
         const arrDifference = makeDiff(value1, value2);
 
-        acc.push({ name: uniqKey, type: 'childrenObj', data: arrDifference });
+        return [...acc, { name: uniqKey, type: 'childrenObj', data: arrDifference }];
       } else if (hasFirst && hasSecond && !isBothEqualValue && !isBothTypeObj) {
-        acc.push({ name: uniqKey, type: 'diffValue', data: [value1, value2] });
+        return [...acc, { name: uniqKey, type: 'diffValue', data: [value1, value2] }];
       } else if (hasFirst && !hasSecond) {
-        acc.push({ name: uniqKey, type: 'onlyhasFirst', data: value1 });
+        return [...acc, { name: uniqKey, type: 'onlyhasFirst', data: value1 }];
       } else if (!hasFirst && hasSecond) {
-        acc.push({ name: uniqKey, type: 'onlyhasSecond', data: value2 });
+        return [...acc, { name: uniqKey, type: 'onlyhasSecond', data: value2 }];
       } else {
-        acc.push({ name: uniqKey, type: 'sameValue', data: value1 });
+        return [...acc, { name: uniqKey, type: 'sameValue', data: value1 }];
       }
-
-      return acc;
     }, []);
 
     return result;
